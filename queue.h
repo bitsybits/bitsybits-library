@@ -11,6 +11,7 @@ public:
   T pop (const T errorCode);
   T peek (const T errorCode) const;
   bool isEmpty () const;
+  void forEach(void (*callback)(T));
 
 private:
   typedef struct node {
@@ -76,6 +77,13 @@ T Queue<T>::peek (const T errorCode) const {
 template<typename T>
 bool Queue<T>::isEmpty () const {
   return mHead == NULL;
+}
+
+template<typename T>
+void Queue<T>::forEach (void (*callback)(T)) {
+  for (pnode cur = mHead; cur != NULL; cur = cur->next) {
+    callback(cur->value);
+  }
 }
 
 #endif //QUEUE_H
