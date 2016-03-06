@@ -6,9 +6,9 @@ SSD1306 mDisplay(&Wire);
 ConsoleView mConsoleView(&mDisplay);
 ConsoleController mConsole(&mConsoleView);
 
-Scheduler mScheduler;
-Task taskConsole(300, -1, &taskConsoleCallback);
-Task taskAddDot(2000, -1, &taskAddDotCallback);
+bt::TaskScheduler mScheduler;
+bt::SchedulerTask taskConsole([] {  mConsole.execute(); });
+bt::SchedulerTask taskAddDot([] { mConsole.print("."); });
 
 void setup() {
   Serial.begin(9600);
@@ -20,11 +20,9 @@ void setup() {
   mDisplay.flipScreenVertically();
   mDisplay.setFontScale2x2(false);
 
-  mScheduler.init();
-  mScheduler.addTask(taskConsole);
-  mScheduler.addTask(taskAddDot);
-  taskConsole.enable(); 
-  taskAddDot.enable();
+  mScheduler.push(&taskConsole)->push(&taskAddDot);
+  taskConsole.attach(100, true);
+  taskAddDot.attach(1000, true);
 
   mConsole.print(KEY_WAKE_UP);
   mConsole.print(KEY_MATRIX_HAS);
@@ -34,12 +32,4 @@ void setup() {
 
 void loop() {
   mScheduler.execute();
-}
-
-void taskConsoleCallback() {
-  mConsole.execute();
-}
-
-void taskAddDotCallback() {
-  mConsole.print(".");
 }
