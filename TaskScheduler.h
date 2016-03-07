@@ -1,6 +1,7 @@
 #ifndef BT_FLAG_TASK_H
 #define BT_FLAG_TASK_H
 
+#include <functional>
 #include "Task.h"
 #include "IExecutor.h"
 #include "queue.h"
@@ -10,7 +11,12 @@ namespace bt {
   class SchedulerTask : public Task, public IExecutor
   {
   public:
-    SchedulerTask(Task::TaskCallback callback) 
+    using SchedulerTaskCallback = std::function<void(void)>;
+
+    SchedulerTask(IExecutor* executor) 
+    : SchedulerTask([=]{executor->execute();}) {}
+
+    SchedulerTask(SchedulerTaskCallback callback) 
     : Task(), mCallback(callback), mCanDoHardWork(false) {}
 
     void attach(uint32_t ms, bool repeat) {
@@ -26,7 +32,7 @@ namespace bt {
     }
   private:
     volatile bool mCanDoHardWork;
-    Task::TaskCallback mCallback;
+    SchedulerTaskCallback mCallback;
   };
 
   class TaskScheduler : public IExecutor
@@ -41,6 +47,7 @@ namespace bt {
 
     virtual uint8_t execute() {
       mTasks.forEach( [](pSchedulerTask task){ task->execute(); yield(); } );
+      return 0;
     }
   private:
     Queue<pSchedulerTask> mTasks;

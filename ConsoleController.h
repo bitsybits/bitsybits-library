@@ -5,13 +5,13 @@
 #include "ConsoleDictionary.h"
 #include "ConsoleView.h"
 
-class ConsoleController
+class ConsoleController : public IExecutor
 {
 public:
   ConsoleController(ConsoleView* display);
   void print(unsigned char dictKey);
   void print(String str);
-  void execute();
+  virtual uint8_t execute();
 
 private:
   ConsoleView* mpConsole;
@@ -31,7 +31,7 @@ void ConsoleController::print(String str){
   mStrQueue.push(str);
 }
 
-void ConsoleController::execute(){
+uint8_t ConsoleController::execute(){
   if(!mKeyQueue.isEmpty()) {
     unsigned char key = SERVICE_ERROR;
     while((key = mKeyQueue.pop(SERVICE_ERROR)) != SERVICE_ERROR) {
@@ -45,6 +45,7 @@ void ConsoleController::execute(){
     }
     mpConsole->redraw();
   }
+  return 0;
 }
 
 #endif //CONSOLE_CONTROLLER_H
