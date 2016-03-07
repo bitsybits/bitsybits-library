@@ -40,7 +40,7 @@ namespace bt {
     }
 
     virtual uint8_t execute() {
-      mTasks.forEach( [](pSchedulerTask task){ task->execute(); } );
+      mTasks.forEach( [](pSchedulerTask task){ task->execute(); yield(); } );
     }
   private:
     Queue<pSchedulerTask> mTasks;
