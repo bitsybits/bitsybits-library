@@ -7,7 +7,7 @@ ConsoleView mConsoleView(&mDisplay);
 ConsoleController mConsole(&mConsoleView);
 
 bt::TaskScheduler mScheduler;
-bt::SchedulerTask taskConsole([] {  mConsole.execute(); });
+bt::SchedulerTask taskConsole(&mConsole);
 bt::SchedulerTask taskAddDot([] { mConsole.print("."); });
 
 void setup() {

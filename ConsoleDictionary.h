@@ -1,6 +1,7 @@
 #ifndef DICTIONARY_EN_
 #define DICTIONARY_EN_
 
+//------------------------------------
 //------------------------------------"________________"
 const char strWakeUp[]      PROGMEM = "Wake up...";
 const char strMatrixHas[]   PROGMEM = "Matrix has you..";

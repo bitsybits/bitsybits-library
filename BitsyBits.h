@@ -14,5 +14,6 @@
 #define DPAD_CENTER   2
 #define DPAD_DOWN     14
 #define VIBRO         15
+#define BATT          A0
 
 #endif //BITSY_BITS_H
